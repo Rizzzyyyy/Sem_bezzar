@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sem Bazaar | Student Marketplace</title>
+  <meta name="description" content="Buy and sell notes, textbooks, project components, and more at Sem Bazaar.">
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header>
+    <div class="logo">Sem Bazaar</div>
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search textbooks, notes, arduino...">
+    </div>
+    <div class="nav-actions">
+      <button class="btn btn-outline" id="themeToggle" title="Toggle Light/Dark Mode" style="padding: 10px; font-size: 16px; display: flex; align-items: center; justify-content: center; border-radius: 50%; width: 40px; height: 40px;">🌓</button>
+      <button class="btn btn-primary" id="sellBtn">Sell Item</button>
+      <button class="btn btn-outline" id="loginBtn">Login / Sign Up</button>
+      <div id="userProfile" class="hidden" style="cursor:pointer; font-weight: 600; color: var(--accent-color);"></div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-container">
+    
+    <!-- Sidebar / Filters -->
+    <aside class="sidebar glass-panel">
+      <h3>Categories</h3>
+      <ul class="category-list" id="categoryList">
+        <li class="active" data-cat="All">All Items</li>
+        <li data-cat="Textbooks">Textbooks</li>
+        <li data-cat="Notes">Study Notes</li>
+        <li data-cat="Project Components">Project Components</li>
+        <li data-cat="Calculators">Calculators</li>
+        <li data-cat="Miscellaneous">Miscellaneous</li>
+      </ul>
+    </aside>
+
+    <!-- Product Listings -->
+    <section class="listings-area">
+      <div class="listings-header">
+        <h2 id="categoryTitle">All Items</h2>
+        <select id="sortSelect" class="btn btn-outline" style="padding: 5px 10px;">
+          <option value="newest">Newest First</option>
+          <option value="price-low">Price: Low to High</option>
+          <option value="price-high">Price: High to Low</option>
+        </select>
+      </div>
+
+      <div class="listings-grid" id="listingsGrid">
+        <!-- Products injected by JS -->
+      </div>
+    </section>
+  </main>
+
+  <!-- Login/Signup Modal -->
+  <div class="modal-overlay" id="loginModal">
+    <div class="modal-content glass-panel" style="max-height: 85vh; overflow-y: auto;">
+      <button class="modal-close" onclick="closeModal('loginModal')">&times;</button>
+      <!-- Login Section -->
+      <div id="loginSection">
+        <h2 style="margin-bottom: 20px;">Sign In</h2>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" id="loginEmail" placeholder="e.g. student@rvce.edu.in">
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="loginPassword" placeholder="Enter your password">
+        </div>
+        <p id="loginError" style="color: var(--danger); font-size: 14px; margin-top: -5px; margin-bottom: 15px; display: none;">Only @rvce.edu.in email addresses are allowed.</p>
+        <button class="btn btn-primary full-width-btn" id="doLoginBtn">Sign In</button>
+        
+        <div style="text-align: center; margin-top: 20px;">
+          <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 10px;">New to Sem Bazaar?</p>
+          <button class="btn btn-outline full-width-btn" onclick="toggleAuthMode('signup')">Create your Sem Bazaar account</button>
+        </div>
+      </div>
+
+      <!-- Signup Section -->
+      <div id="signupSection" class="hidden">
+        <h2 style="margin-bottom: 20px;">Create Account</h2>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" id="regEmail" placeholder="e.g. student@rvce.edu.in">
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="regPassword" placeholder="Create a password">
+        </div>
+        <div class="form-group">
+          <label>Profile Logo</label>
+          <input type="file" id="regLogo" accept="image/*">
+        </div>
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="regName" placeholder="Your name">
+        </div>
+        <div class="form-group">
+          <label>USN</label>
+          <input type="text" id="regUSN" placeholder="e.g. 1RV21CS001">
+        </div>
+        <div class="form-group">
+          <label>Branch</label>
+          <select id="regBranch">
+            <option value="CSE">CSE</option>
+            <option value="ISE">ISE</option>
+            <option value="AIML">AIML</option>
+            <option value="CS-DS">CS-DS</option>
+            <option value="CS-CY">CS-CY</option>
+            <option value="ECE">ECE</option>
+            <option value="ETE">ETE</option>
+            <option value="EIE">EIE</option>
+            <option value="EEE">EEE</option>
+            <option value="IEM">IEM</option>
+            <option value="ME">ME</option>
+            <option value="CV">CV</option>
+            <option value="CH">CH</option>
+            <option value="AS">AS</option>
+            <option value="MCA">MCA</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="tel" id="regPhone" placeholder="e.g. 9876543210 (optional)">
+        </div>
+        <div class="form-group">
+          <label>Hostel Block / Address</label>
+          <input type="text" id="regAddress" placeholder="e.g. Cauvery Block, Room 102 (optional)">
+        </div>
+        <p id="regError" style="color: var(--danger); font-size: 14px; margin-top: -5px; margin-bottom: 15px; display: none;">Only @rvce.edu.in email addresses are allowed.</p>
+        <button class="btn btn-primary full-width-btn" id="doSignupBtn">Create Account</button>
+        
+        <div style="text-align: center; margin-top: 20px;">
+          <p style="font-size: 14px; color: var(--text-secondary);">Already have an account? <a href="#" style="color: var(--accent-color); text-decoration: none;" onclick="toggleAuthMode('login')">Sign in</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sell Item Modal -->
+  <div class="modal-overlay" id="sellModal">
+    <div class="modal-content glass-panel">
+      <button class="modal-close" onclick="closeModal('sellModal')">&times;</button>
+      <h2 id="sellModalTitle" style="margin-bottom: 20px;">List an Item</h2>
+      <form id="sellForm">
+        <div class="form-group">
+          <label>Photos of the Object</label>
+          <input type="file" id="sellImage" accept="image/*">
+        </div>
+        <div class="form-group">
+          <label>Title</label>
+          <input type="text" id="sellTitle" required placeholder="e.g. Clean Casio Calculator">
+        </div>
+        <div class="form-group">
+          <label>Category</label>
+          <select id="sellCategory">
+            <option>Textbooks</option>
+            <option>Notes</option>
+            <option>Project Components</option>
+            <option>Calculators</option>
+            <option>Miscellaneous</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Price (₹)</label>
+          <input type="number" id="sellPrice" required placeholder="500">
+        </div>
+        <div class="form-group">
+          <label>Condition</label>
+          <select id="sellCondition">
+            <option>Like New</option>
+            <option>Good</option>
+            <option>Fair</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea id="sellDesc" rows="3" placeholder="Describe the item..."></textarea>
+        </div>
+        <button type="submit" id="sellSubmitBtn" class="btn btn-primary full-width-btn">Publish Listing</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Product Detail Modal -->
+  <div class="modal-overlay" id="detailModal">
+    <div class="modal-content glass-panel" style="max-width: 600px;">
+      <button class="modal-close" onclick="closeModal('detailModal')">&times;</button>
+      <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+        <img id="detailImg" src="" style="width: 200px; height: 200px; object-fit: cover; border-radius: 8px;">
+        <div style="flex: 1;">
+          <h2 id="detailTitle" style="margin-bottom: 10px;"></h2>
+          <div class="product-price" id="detailPrice" style="font-size: 24px;"></div>
+          
+          <div id="detailSellerProfile" style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px; margin-top: 10px; padding: 10px; background: var(--bg-tertiary); border-radius: 8px;">
+            <img id="detailSellerLogo" src="" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; background: var(--bg-primary);">
+            <div>
+              <div id="detailSellerName" style="font-weight: 600; font-size: 14px;"></div>
+              <div id="detailSellerDetails" style="font-size: 12px; color: var(--text-secondary);"></div>
+            </div>
+          </div>
+          
+          <p style="margin-bottom: 15px;" id="detailDesc"></p>
+          <span class="category-badge" style="position: static; display: inline-block; margin-bottom: 10px;" id="detailCondition"></span>
+        </div>
+      </div>
+      
+      <!-- Contact Seller / Manage Listing -->
+      <div style="margin-top: 20px; padding: 20px; background: var(--input-bg); border-radius: 8px; text-align: center;">
+        <h4 id="detailContactHeader" style="margin-bottom: 15px;">Interested in this item?</h4>
+        <button id="detailInterestBtn" class="btn btn-primary" style="display: inline-block; padding: 12px 25px;">I'm Interested</button>
+        <button id="detailEditBtn" class="btn btn-primary" style="display: none; padding: 12px 25px;">Edit Listing</button>
+        
+        <div id="detailEmailContainer" style="margin-top: 15px; display: flex; align-items: center; justify-content: center; gap: 10px;">
+          <span id="detailSellerEmailDisplay" style="font-size: 14px; font-weight: 500; color: var(--text-secondary);"></span>
+          <button id="copyEmailBtn" class="btn btn-outline" style="padding: 5px 10px; font-size: 12px;">Copy Email</button>
+        </div>
+        <div id="detailRequestStatusContainer" style="margin-top: 15px; display: none;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Welcome (Buy/Sell) Modal -->
+  <div class="modal-overlay" id="welcomeModal">
+    <div class="modal-content glass-panel" style="text-align: center;">
+      <h2 style="margin-bottom: 20px;">What do you want to do today?</h2>
+      <div style="display: flex; gap: 20px; justify-content: center; margin-top: 30px;">
+        <button class="btn btn-primary" style="padding: 20px 40px; font-size: 20px;" onclick="selectAction('buy')">Buy</button>
+        <button class="btn btn-outline" style="padding: 20px 40px; font-size: 20px;" onclick="selectAction('sell')">Sell</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile Modal -->
+  <div class="modal-overlay" id="profileModal">
+    <div class="modal-content glass-panel">
+      <button class="modal-close" onclick="closeModal('profileModal')">&times;</button>
+      <div style="display: flex; gap: 20px; align-items: center; margin-bottom: 20px;">
+        <img id="profileLogoDisplay" src="" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; background: var(--bg-tertiary);">
+        <div>
+          <h2 id="profileNameDisplay"></h2>
+          <p style="color: var(--text-secondary); margin-top: 5px;">
+            <span id="profileUSNDisplay"></span> &bull; <span id="profileBranchDisplay"></span>
+          </p>
+        </div>
+      </div>
+      <!-- Switch Account Section -->
+      <div style="margin-bottom: 20px; background: var(--input-bg); padding: 12px; border-radius: 12px; border: 1px solid var(--border-color);">
+        <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; font-weight: 600;">Logged-in Accounts:</div>
+        <div id="sessionAccountsList" style="display: flex; flex-direction: column; gap: 8px; max-height: 120px; overflow-y: auto;">
+          <!-- Active sessions injected here -->
+        </div>
+        <button class="btn btn-outline" style="width: 100%; margin-top: 8px; padding: 6px 12px; font-size: 11px; height: auto;" onclick="closeModal('profileModal'); openModal('loginModal')">+ Switch or Add Account</button>
+      </div>
+      <hr style="border-color: var(--border-color); margin-bottom: 20px;">
+      <h3 style="margin-bottom: 15px;">My Enlisted Items</h3>
+      <div id="profileItemsList" style="max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px;">
+        <!-- Items injected by JS -->
+      </div>
+      <hr style="border-color: var(--border-color); margin-top: 20px; margin-bottom: 20px;">
+      <h3 style="margin-bottom: 15px;">Requests Received</h3>
+      <div id="profileRequestsList" style="max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px;">
+        <!-- Requests injected by JS -->
+      </div>
+      <button class="btn btn-outline full-width-btn" style="margin-top: 20px;" onclick="logout()">Log Out</button>
+    </div>
+  </div>
+
+  <div id="toastNotification" class="toast hidden"></div>
+  <script src="app.js?v=3"></script>
+</body>
+</html>
