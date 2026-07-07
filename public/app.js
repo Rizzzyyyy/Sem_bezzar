@@ -9,7 +9,7 @@ let currentTheme = localStorage.getItem('sem_bazaar_theme') || 'dark';
 let isRegistering = false;
 let editingItemId = null;
 
-const API_URL = 'http://localhost:3000/api';
+const API_URL = '/api';
 
 function parseJwt (token) {
     try {
