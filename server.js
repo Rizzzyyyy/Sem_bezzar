@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const path = require('path');
-const db = require('./database');
+const db = require('./next-app/lib/db.js');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
