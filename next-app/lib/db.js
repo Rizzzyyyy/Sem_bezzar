@@ -1,4 +1,4 @@
-import { Pool } from 'pg';
+const { Pool } = require('pg');
 
 let pool;
 
@@ -78,21 +78,21 @@ const convertQuery = (query) => {
     return query.replace(/\?/g, () => `$${index++}`);
 };
 
-export const get = async (query, params = []) => {
+const get = async (query, params = []) => {
     if (!pool) throw new Error("Database not connected. Please set DATABASE_URL.");
     const pgQuery = convertQuery(query);
     const { rows } = await pool.query(pgQuery, params);
     return rows[0];
 };
 
-export const all = async (query, params = []) => {
+const all = async (query, params = []) => {
     if (!pool) throw new Error("Database not connected. Please set DATABASE_URL.");
     const pgQuery = convertQuery(query);
     const { rows } = await pool.query(pgQuery, params);
     return rows;
 };
 
-export const run = async (query, params = []) => {
+const run = async (query, params = []) => {
     if (!pool) throw new Error("Database not connected. Please set DATABASE_URL.");
     const pgQuery = convertQuery(query);
 
@@ -119,3 +119,5 @@ export const run = async (query, params = []) => {
         lastID: rows && rows.length > 0 ? rows[0].lastid || rows[0].lastID : null
     };
 };
+
+module.exports = { get, all, run };

@@ -1,9 +1,16 @@
 // State
 let items = [];
 let users = {};
-let currentUser = localStorage.getItem('sem_bazaar_token') ? parseJwt(localStorage.getItem('sem_bazaar_token')).email : null;
+let rawToken = localStorage.getItem('sem_bazaar_token');
+let parsedToken = rawToken && rawToken !== 'undefined' ? parseJwt(rawToken) : null;
+let currentUser = parsedToken ? parsedToken.email : null;
 let requests = [];
-let sessions = JSON.parse(localStorage.getItem('sem_bazaar_sessions_v3')) || [];
+let sessions = [];
+try {
+  sessions = JSON.parse(localStorage.getItem('sem_bazaar_sessions_v3')) || [];
+} catch(e) {
+  sessions = [];
+}
 let activeCategory = 'All';
 let currentTheme = localStorage.getItem('sem_bazaar_theme') || 'dark';
 let isRegistering = false;
